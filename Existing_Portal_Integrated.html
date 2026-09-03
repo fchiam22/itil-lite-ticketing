@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IT Service Request Portal — Biomedia</title>
+<style>
+  :root {
+    --cream: #FFFFFF;
+    --ink: #12253F;
+    --grey: #5A6B7D;
+    --border: #DCE3EC;
+    --red: #B23A2E;
+    --red-light: #F0B8AE;
+    --red-pale: #FBEDEA;
+    --amber: #D68A2C;
+    --blue: #0B5AA0;
+    --teal: #12897A;
+    --plum: #7D6A93;
+    --olive: #7A8450;
+    --terracotta: #A15C4A;
+    --white: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: min(920px, 94vw);
+    margin: 0 auto;
+    padding: clamp(14px, 3vw, 22px) clamp(14px, 4vw, 24px) 40px;
+  }
+
+  .scale-container {
+    transform-origin: top left;
+    width: 100%;
+  }
+
+  .brand-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .brand-header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .brand-header-links {
+    display: flex;
+    gap: 8px;
+  }
+
+  .header-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    font-weight: bold;
+    color: var(--red);
+    text-decoration: none;
+    border: 1.3px solid var(--red);
+    border-radius: 20px;
+    padding: 5px 12px;
+    transition: background 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .header-link svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .header-link:hover {
+    background: var(--red);
+    color: var(--white);
+  }
+
+  .brand-word {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 800;
+    font-size: 19px;
+    letter-spacing: 1.5px;
+    color: var(--red);
+  }
+
+  .brand-sub {
+    font-size: 11px;
+    color: var(--grey);
+    letter-spacing: 0.3px;
+  }
+
+  .tagline-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    margin-bottom: 18px;
+    border-top: 1px dotted var(--red);
+    border-bottom: 1px dotted var(--red);
+    font-size: 10.5px;
+    font-weight: bold;
+    letter-spacing: 1.2px;
+    color: var(--red);
+  }
+
+  .tagline-banner .dot {
+    color: var(--border);
+    font-weight: normal;
+  }
+
+  h1 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 23px;
+    line-height: 1.15;
+    margin: 0 0 6px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .subtitle {
+    color: var(--grey);
+    font-size: 13px;
+    line-height: 1.4;
+    max-width: 620px;
+    margin-bottom: 18px;
+  }
+
+  .step-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: var(--grey);
+    text-transform: uppercase;
+    margin: 16px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .step-label .num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--white);
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+  }
+
+  /* Category cards */
+  /* Icon flow row */
+  .flow-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 18px;
+  }
+
+  .step-card {
+    flex: 1 1 176px;
+    max-width: 200px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 12px 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    position: relative;
+  }
+
+  .step-card:hover {
+    box-shadow: 0 3px 14px rgba(11,90,160,0.10);
+  }
+
+  .step-card.active {
+    border-color: var(--step-accent, var(--red));
+    box-shadow: 0 0 0 2px var(--step-accent, var(--red));
+    background: var(--red-pale);
+  }
+
+  .step-badge {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: var(--step-accent, var(--red));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    position: relative;
+  }
+
+  .step-badge svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  .step-num {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--white);
+    font-size: 10.5px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+  }
+
+  .step-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--ink);
+    margin-bottom: 3px;
+    line-height: 1.25;
+  }
+
+  .step-desc {
+    font-size: 9.5px;
+    color: var(--grey);
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .step-count {
+    display: inline-block;
+    font-size: 8.5px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--cream);
+    color: var(--grey);
+    border: 1px solid var(--border);
+  }
+
+  .arrow-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--border);
+    font-size: 16px;
+    flex: 0 0 14px;
+  }
+
+  @media (max-width: 700px) {
+    .arrow-connector { display: none; }
+  }
+
+  /* Small phones: tighten the header, tagline, and step cards further */
+  @media (max-width: 480px) {
+    .brand-word { font-size: 16px; }
+    .brand-sub { font-size: 9.5px; }
+    .tagline-banner {
+      font-size: 8.5px;
+      gap: 6px;
+      padding: 6px 8px;
+    }
+    h1 { font-size: 19px; }
+    .subtitle { font-size: 12px; }
+    .step-card { flex-basis: 45%; max-width: none; }
+    .step-title { font-size: 13px; }
+    .step-desc { font-size: 8.5px; }
+    .copy-row { grid-template-columns: 44px 1fr auto; }
+    .copy-row-label { font-size: 9.5px; }
+  }
+
+  .detail-panel {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 18px;
+  }
+
+  .detail-panel-heading {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--grey);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  @media (max-width: 640px) {
+    .cat-grid { grid-template-columns: 1fr; }
+  }
+
+  .cat-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-left: 5px solid var(--cat-accent, var(--ink));
+    border-radius: 4px;
+    padding: 6px 30px 6px 10px;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease, transform 0.1s ease;
+    position: relative;
+  }
+
+  .cat-card:hover {
+    box-shadow: 0 3px 14px rgba(33,28,24,0.08);
+  }
+
+  .cat-card.selected {
+    box-shadow: 0 0 0 2px var(--cat-accent, var(--ink));
+  }
+
+  .cat-card .cat-title {
+    font-weight: bold;
+    font-size: 12.5px;
+    margin-bottom: 2px;
+    line-height: 1.25;
+  }
+
+  .cat-card .cat-desc {
+    font-size: 10.5px;
+    color: var(--grey);
+    line-height: 1.3;
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cat-card .cat-meta {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: bold;
+    padding: 2px 7px;
+    border-radius: 20px;
+    background: var(--cream);
+    color: var(--ink);
+    border: 1px solid var(--border);
+  }
+
+  .cat-card .check {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: transparent;
+  }
+
+  .cat-card.selected .check {
+    background: var(--cat-accent, var(--ink));
+    border-color: var(--cat-accent, var(--ink));
+    color: var(--white);
+  }
+
+  /* Form section */
+  .form-panel {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 26px 28px 28px;
+    display: none;
+  }
+
+  .form-panel.visible { display: block; }
+
+  .field {
+    margin-bottom: 18px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+
+  .field .hint {
+    font-size: 11px;
+    color: var(--grey);
+    font-weight: normal;
+    margin-left: 4px;
+  }
+
+  .field input[type=text],
+  .field input[type=email],
+  .field select,
+  .field textarea {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 12px;
+    font-family: Arial, sans-serif;
+    font-size: 13.5px;
+    color: var(--ink);
+    background: var(--cream);
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: 2px solid var(--red);
+    outline-offset: 1px;
+    background: var(--white);
+  }
+
+  .field textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  .row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .row2 { grid-template-columns: 1fr; }
+  }
+
+  .template-note {
+    font-size: 11.5px;
+    color: var(--grey);
+    font-style: italic;
+    margin-top: -8px;
+    margin-bottom: 18px;
+  }
+
+  .template-link-banner {
+    background: var(--ink);
+    border-left: 5px solid var(--red);
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin: -6px 0 18px;
+    color: var(--white);
+  }
+
+  .template-link-banner .tlb-title {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .template-link-banner .tlb-desc {
+    font-size: 12px;
+    color: var(--blue-light, #cfd8e3);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+  .template-link-banner a.tlb-btn {
+    display: inline-block;
+    background: var(--red);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 3px;
+  }
+
+  .template-link-banner a.tlb-btn:hover {
+    background: #9a3126;
+  }
+
+  /* routing preview */
+  .routing-banner {
+    background: var(--ink);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-left: 5px solid var(--red);
+  }
+
+  .routing-banner .rb-label {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: var(--red-light);
+    white-space: nowrap;
+  }
+
+  .routing-banner .rb-detail {
+    font-size: 13px;
+    color: var(--white);
+    line-height: 1.5;
+  }
+
+  .routing-banner .rb-detail b { color: var(--white); }
+
+  .submit-btn {
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: 3px;
+    padding: 13px 26px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    transition: background 0.15s ease;
+  }
+
+  .submit-btn:hover { background: #9a3126; }
+
+  .submit-btn:disabled {
+    background: var(--border);
+    color: var(--grey);
+    cursor: not-allowed;
+  }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--grey);
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  .fallback-link {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--cream);
+    border: 1px dashed var(--border);
+    border-radius: 3px;
+    font-size: 12.5px;
+    color: var(--ink);
+  }
+
+  .fallback-link a {
+    color: var(--red);
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .fallback-link a:hover { text-decoration: underline; }
+
+  .attach-field { margin-bottom: 18px; }
+
+  .attach-dropzone {
+    border: 1.5px dashed var(--border);
+    border-radius: 4px;
+    padding: 14px 16px;
+    text-align: center;
+    cursor: pointer;
+    background: var(--cream);
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .attach-dropzone:hover,
+  .attach-dropzone.dragover {
+    border-color: var(--red);
+    background: var(--red-pale);
+  }
+
+  .attach-dropzone .attach-btn-label {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--red);
+  }
+
+  .attach-dropzone .attach-btn-sub {
+    font-size: 11px;
+    color: var(--grey);
+    margin-top: 3px;
+  }
+
+  .attach-list {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .attach-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--white);
+    border: 1.3px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 8px 5px 12px;
+    font-size: 12px;
+    color: var(--ink);
+  }
+
+  .attach-chip .attach-chip-size {
+    color: var(--grey);
+    font-size: 10.5px;
+  }
+
+  .attach-chip button {
+    border: none;
+    background: var(--border);
+    color: var(--ink);
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .attach-chip button:hover { background: var(--red); color: var(--white); }
+
+  .attach-note {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #FBEEDD;
+    border-left: 4px solid var(--amber);
+    border-radius: 3px;
+    font-size: 11.5px;
+    color: var(--ink);
+    line-height: 1.5;
+    display: none;
+  }
+
+  .copy-panel {
+    margin-top: 14px;
+    padding: 16px 18px 14px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+
+  .copy-panel-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .copy-row {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .copy-row-body {
+    align-items: start;
+  }
+
+  .copy-row-label {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--grey);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .copy-row-value {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    color: var(--ink);
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .copy-row-value-body {
+    max-height: 140px;
+    overflow-y: auto;
+    line-height: 1.5;
+  }
+
+  .copy-btn {
+    background: var(--white);
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    border-radius: 3px;
+    padding: 7px 14px;
+    font-size: 11.5px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .copy-btn:hover {
+    background: var(--ink);
+    color: var(--white);
+  }
+
+  .copy-btn.copied {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--white);
+  }
+
+  .copy-panel-note {
+    font-size: 11px;
+    color: var(--grey);
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  .empty-hint {
+    font-size: 13px;
+    color: var(--grey);
+    font-style: italic;
+    padding: 20px 0;
+  }
+
+  .top-footer {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--grey);
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<div id="scaleContainer" class="scale-container">
+  <div class="brand-header">
+    <div class="brand-header-left">
+      <div class="brand-word">BIOMEDIA</div>
+      <div class="brand-sub">IT &amp; Digital Transformation</div>
+    </div>
+    <div class="brand-header-links">
+      <a class="header-link" href="https://spdscientific.sharepoint.com/:b:/r/sites/LIVES-ITS/Media/ITSM/IT_Service_Request_Portal_User%20Guide.pdf?d=w00b9b0962ddc4fdbb6a967f92edc624e&csf=1&web=1&e=NZ3jgQ" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+        User Guide
+      </a>
+      <a class="header-link" href="https://spdscientific.sharepoint.com/:b:/r/sites/LIVES-ITS/Media/ITSM/IT_Service_Request_Portal_FAQ.pdf?d=wb27dc9095c5c410bb5f6c102351e28da&csf=1&web=1&e=HhQZyW" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        FAQ
+      </a>
+      <a class="header-link" href="https://spdscientific.sharepoint.com/:v:/r/sites/LIVES-ITS/Media/ITSM/ITSM_BM.mp4?d=w958c4c51c85c4f5aa1169e3d94883588&csf=1&web=1&e=CHfJL2" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+        Video Guide
+      </a>
+      <a class="header-link" href="/admin.html">IT Staff</a>
+    </div>
+  </div>
+
+  <div class="tagline-banner">
+    <span>ONE PORTAL</span><span class="dot">&bull;</span><span>EVERY IT REQUEST</span><span class="dot">&bull;</span><span>ROUTED RIGHT</span>
+  </div>
+
+  <h1>Where should this go?</h1>
+  <div class="subtitle">Pick the category that matches your request below. The portal routes it to the right inbox and tags it correctly — you don't need to remember the rules.</div>
+
+  <div class="flow-row" id="flowRow"></div>
+
+  <div class="detail-panel" id="detailPanel" style="display:none;"></div>
+</div>
+
+  <div id="formSection" style="display:none;">
+    <div class="step-label"><span class="num">2</span> Tell us more</div>
+
+
+
+    <div class="routing-banner" id="routingBanner"></div>
+
+    <div class="form-panel visible" id="formPanel">
+
+      <div id="templateField" style="display:none;" class="field">
+        <label>Start from a template <span class="hint">(optional — fills in the description below)</span></label>
+        <select id="templateSelect">
+          <option value="">— Select a template —</option>
+        </select>
+        <div class="template-note">More templates will be added here over time.</div>
+      </div>
+
+      <div id="templateLinkBanner" class="template-link-banner" style="display:none;"></div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Your name</label>
+          <input type="text" id="reqName" placeholder="e.g. Jane Tan" />
+        </div>
+        <div class="field">
+          <label>Your email</label>
+          <input type="email" id="reqEmail" placeholder="jane.tan@biomediaholdings.com" />
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Entity / location</label>
+          <select id="reqEntity">
+            <option value="">— Select —</option>
+            <option>Singapore</option>
+            <option>Malaysia</option>
+            <option>Thailand</option>
+            <option>Vietnam</option>
+            <option>Other / Group</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Department</label>
+          <input type="text" id="reqDept" placeholder="e.g. Finance, Sales, Warehouse" />
+        </div>
+      </div>
+
+      <div id="approvalField" style="display:none;">
+        <div class="row2">
+          <div class="field">
+            <label>Approval Name, Title <span class="hint">(required)</span></label>
+            <input type="text" id="reqApprovalName" placeholder="e.g. John Smith, IT HOD" />
+          </div>
+          <div class="field">
+            <label>Approval Email <span class="hint">(required)</span></label>
+            <input type="email" id="reqApprovalEmail" placeholder="e.g. john.smith@biomediaholdings.com" />
+          </div>
+        </div>
+      </div>
+
+      <div class="field" id="priorityField" style="display:none;">
+        <label>Priority <span class="hint" id="priorityHint">(not sure? the pre-selected default is fine — IT will re-prioritize if needed)</span></label>
+        <select id="reqPriority"></select>
+      </div>
+
+      <div class="field">
+        <label>Subject <span class="hint">(this becomes the email subject line — the tag is pre-filled for you)</span></label>
+        <input type="text" id="reqSummary" placeholder="e.g. Request access to shared drive" />
+      </div>
+
+      <div class="field">
+        <label>Description</label>
+        <textarea id="reqDescription" placeholder="What do you need, and any relevant details (system, urgency, business impact)..."></textarea>
+      </div>
+
+      <div class="field attach-field">
+        <label>Attachments <span class="hint">(optional — screenshots, forms, documents)</span></label>
+        <div class="attach-dropzone" id="attachDropzone">
+          <div class="attach-btn-label">＋ Choose files</div>
+          <div class="attach-btn-sub">or drag and drop here</div>
+        </div>
+        <input type="file" id="reqAttachments" multiple style="display:none;" />
+        <div class="attach-list" id="attachList"></div>
+        <div class="attach-note" id="attachNote">
+          <b>Heads up:</b> email links can't attach files automatically. When your email opens, manually attach the file(s) listed above before sending — they're also listed in the email body as a reminder.
+        </div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn">Submit ticket →</button>
+      <div class="footer-note">Your request is saved immediately and automatically assigned to the appropriate IT support group.</div>
+      <div class="fallback-link" id="fallbackLink" style="display:none;"></div>
+
+      <div class="copy-panel" id="copyPanel" style="display:none;">
+        <div class="copy-panel-title">Didn't open? Copy these into a new email instead</div>
+        <div class="copy-row">
+          <div class="copy-row-label">To</div>
+          <div class="copy-row-value" id="copyTo"></div>
+          <button class="copy-btn" data-target="copyTo">Copy</button>
+        </div>
+        <div class="copy-row" id="copyCcRow" style="display:none;">
+          <div class="copy-row-label">CC</div>
+          <div class="copy-row-value" id="copyCc"></div>
+          <button class="copy-btn" data-target="copyCc">Copy</button>
+        </div>
+        <div class="copy-row">
+          <div class="copy-row-label">Subject</div>
+          <div class="copy-row-value" id="copySubject"></div>
+          <button class="copy-btn" data-target="copySubject">Copy</button>
+        </div>
+        <div class="copy-row copy-row-body">
+          <div class="copy-row-label">Body</div>
+          <div class="copy-row-value copy-row-value-body" id="copyBody"></div>
+          <button class="copy-btn" data-target="copyBody">Copy</button>
+        </div>
+        <div class="copy-panel-note" id="copyPanelNote">In Outlook: click New Email, then paste each field in — To, Subject, and Body.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="top-footer">
+    <span>Biomedia (SPD Scientific) | IT Service Request Portal</span>
+    <span>v1.1 — August 2026</span>
+  </div>
+</div>
+
+<script>
+  // ============================================================
+  // CONFIG — edit here to change routing, tags, or destinations
+  // ============================================================
+  const CATEGORIES = [
+    {
+      id: "sap-request",
+      kind: "request",
+      group: "SAP-related",
+      accent: "var(--blue)",
+      title: "SAP – Request",
+      desc: "New SAP access, reports, or standard asks — Project will triage.",
+      pills: ["itsupport@biomediaholdings.com", "Project team"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "SAP-Request",
+      requiresApproval: true,
+    },
+    {
+      id: "sap-change",
+      kind: "change",
+      group: "SAP-related",
+      accent: "var(--blue)",
+      title: "SAP – Change",
+      desc: "Changes to SAP configuration, workflows, or modules — Project will triage.",
+      pills: ["itsupport@biomediaholdings.com", "Project team"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "SAP-Change",
+      requiresApproval: true,
+    },
+    {
+      id: "sap-incident",
+      kind: "incident",
+      group: "SAP-related",
+      accent: "var(--blue)",
+      title: "SAP – Incident",
+      desc: "Something in SAP is broken or not working — Project will triage.",
+      pills: ["itsupport@biomediaholdings.com", "Project team"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "SAP-Incident",
+    },
+    {
+      id: "sap-nonstd",
+      kind: "change-request",
+      group: "SAP-related",
+      accent: "var(--blue)",
+      title: "SAP – Non-Standard Change/Request",
+      desc: "An SAP change or request that isn't standard and needs assessment or judgement.",
+      pills: ["itsupport@biomediaholdings.com", "Project team"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "SAP-Non-Std-Change-Request",
+      requiresApproval: true,
+    },
+    {
+      id: "data-request",
+      kind: "request",
+      group: "AI/Data",
+      accent: "var(--plum)",
+      title: "AI/Data – Standard Request",
+      desc: "New AI/Data access, reports, dashboards, or other standard asks that don't require a system change.",
+      pills: ["itsupport@biomediaholdings.com", "P4 · 2 weeks min."],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "AI-Data-Standard-Request",
+      requiresApproval: true,
+    },
+    {
+      id: "data-change",
+      kind: "change",
+      group: "AI/Data",
+      accent: "var(--plum)",
+      title: "AI/Data – Standard Change",
+      desc: "Changes to dashboards, data pipelines, models, or AI/analytics tooling.",
+      pills: ["itsupport@biomediaholdings.com", "P3 · 3–5 working days"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "AI-Data-Standard-Change",
+      requiresApproval: true,
+    },
+    {
+      id: "data-incident",
+      kind: "incident",
+      group: "AI/Data",
+      accent: "var(--plum)",
+      title: "AI/Data incident",
+      desc: "A dashboard, pipeline, model, or AI/analytics tool that's broken or not working.",
+      pills: ["itsupport@biomediaholdings.com", "P3 · 3–5 working days"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "AI-Data-Incident",
+    },
+    {
+      id: "data-nonstd",
+      kind: "change-request",
+      group: "AI/Data",
+      accent: "var(--plum)",
+      title: "AI/Data – Non-standard Change/Request",
+      desc: "A data/AI change or request that isn't standard and needs assessment or judgement.",
+      pills: ["itsupport@biomediaholdings.com", "P4 · 2 weeks min."],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "AI-Data-Non-Std-Change-Request",
+      requiresApproval: true,
+    },
+    {
+      id: "ea-request",
+      kind: "request",
+      group: "Enterprise Applications",
+      accent: "var(--olive)",
+      title: "Enterprise Applications – Standard Request",
+      desc: "New access, reports, or standard asks for enterprise applications (e.g. ERP, CRM, Finance systems) that don't require a system change.",
+      pills: ["itsupport@biomediaholdings.com", "P4 · 2 weeks min."],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "EA-Standard-Request",
+      requiresApproval: true,
+    },
+    {
+      id: "ea-change",
+      kind: "change",
+      group: "Enterprise Applications",
+      accent: "var(--olive)",
+      title: "Enterprise Applications – Standard Change",
+      desc: "Changes to enterprise application configuration, workflows, or modules.",
+      pills: ["itsupport@biomediaholdings.com", "P3 · 3–5 working days"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "EA-Standard-Change",
+      requiresApproval: true,
+    },
+    {
+      id: "ea-incident",
+      kind: "incident",
+      group: "Enterprise Applications",
+      accent: "var(--olive)",
+      title: "Enterprise Applications incident",
+      desc: "An enterprise application (ERP, CRM, Finance, etc.) that's broken or not working.",
+      pills: ["itsupport@biomediaholdings.com", "P3 · 3–5 working days"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "EA-Incident",
+    },
+    {
+      id: "ea-nonstd",
+      kind: "change-request",
+      group: "Enterprise Applications",
+      accent: "var(--olive)",
+      title: "Enterprise Applications – Non-standard Change/Request",
+      desc: "An enterprise application change or request that isn't standard and needs assessment or judgement.",
+      pills: ["itsupport@biomediaholdings.com", "P4 · 2 weeks min."],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "EA-Non-Std-Change-Request",
+      requiresApproval: true,
+    },
+    {
+      id: "std-request",
+      kind: "request",
+      group: "Digital Infrastructure (Standard + Non-standard)",
+      accent: "var(--amber)",
+      title: "Standard Digital Infrastructure Request",
+      desc: "A routine, pre-approved request — e.g. password reset, standard access, standard software install.",
+      pills: ["itsupport@biomediaholdings.com", "P4 · 2 weeks min."],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "STD-Request",
+      requiresApproval: true,
+    },
+    {
+      id: "std-change",
+      kind: "change",
+      group: "Digital Infrastructure (Standard + Non-standard)",
+      accent: "var(--amber)",
+      title: "Standard Digital Infrastructure Change",
+      desc: "A routine, pre-approved change to an existing system or configuration — already on the standard list.",
+      pills: ["itsupport@biomediaholdings.com", "P3 · 3–5 working days"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "STD-Change",
+      requiresApproval: true,
+    },
+    {
+      id: "it-nonstd",
+      kind: "change-request",
+      group: "Digital Infrastructure (Standard + Non-standard)",
+      accent: "var(--ink)",
+      title: "Non-standard Digital Infrastructure Change/Request",
+      desc: "A change or request that isn't on the standard list and needs assessment or judgement.",
+      pills: ["itsupport@biomediaholdings.com", "P4 · 2 weeks min."],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "Non-Std-Change-Request",
+      requiresApproval: true,
+    },
+    {
+      id: "it-incident",
+      kind: "incident",
+      group: "Digital Infrastructure (Standard + Non-standard)",
+      accent: "var(--red)",
+      title: "Digital Infrastructure Incident",
+      desc: "Something is broken or not working — hardware, network, access, application errors.",
+      pills: ["itsupport@biomediaholdings.com", "P1–P4 by severity"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "Digital-Infrastructure-Incident",
+    },
+    {
+      id: "dw-request",
+      kind: "request",
+      group: "Digital Workplace",
+      accent: "var(--teal)",
+      title: "Digital Workplace – Standard Request",
+      desc: "New endpoint, SharePoint, or workplace-tooling access/setup requests.",
+      pills: ["itsupport@biomediaholdings.com", "P4 · 2 weeks min."],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "DW-Standard-Request",
+      requiresApproval: true,
+    },
+    {
+      id: "dw-change",
+      kind: "change",
+      group: "Digital Workplace",
+      accent: "var(--teal)",
+      title: "Digital Workplace – Standard Change",
+      desc: "Endpoint, SharePoint, identity/access, or workplace-tooling changes.",
+      pills: ["itsupport@biomediaholdings.com", "P3 · 3–5 working days"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "DW-Standard-Change",
+      requiresApproval: true,
+    },
+    {
+      id: "dw-incident",
+      kind: "incident",
+      group: "Digital Workplace",
+      accent: "var(--teal)",
+      title: "Digital Workplace incident",
+      desc: "Endpoint, SharePoint, or identity/access issue that's broken or not working.",
+      pills: ["itsupport@biomediaholdings.com", "P3 · 3–5 working days"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "DW-Incident",
+    },
+    {
+      id: "dw-nonstd",
+      kind: "change-request",
+      group: "Digital Workplace",
+      accent: "var(--teal)",
+      title: "Digital Workplace – Non-standard Change/Request",
+      desc: "A workplace change or request that isn't standard and needs assessment or judgement.",
+      pills: ["itsupport@biomediaholdings.com", "P4 · 2 weeks min."],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "DW-Non-Std-Change-Request",
+      requiresApproval: true,
+    },
+    {
+      id: "mdm-request",
+      kind: "request",
+      group: "MDM-related",
+      accent: "var(--terracotta)",
+      title: "MDM – Standard Request",
+      desc: "New master data record creation, access, or other standard master data asks (e.g. customer, vendor, product master).",
+      pills: ["itsupport@biomediaholdings.com", "P4 · 2 weeks min."],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "MDM-Standard-Request",
+      requiresApproval: true,
+    },
+    {
+      id: "mdm-change",
+      kind: "change",
+      group: "MDM-related",
+      accent: "var(--terracotta)",
+      title: "MDM – Standard Change",
+      desc: "Changes to master data governance rules, hierarchies, or master data configuration.",
+      pills: ["itsupport@biomediaholdings.com", "P3 · 3–5 working days"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "MDM-Standard-Change",
+      requiresApproval: true,
+    },
+    {
+      id: "mdm-incident",
+      kind: "incident",
+      group: "MDM-related",
+      accent: "var(--terracotta)",
+      title: "MDM incident",
+      desc: "A master data record, sync, or MDM platform issue that's broken or not working.",
+      pills: ["itsupport@biomediaholdings.com", "P3 · 3–5 working days"],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "MDM-Incident",
+    },
+    {
+      id: "mdm-nonstd",
+      kind: "change-request",
+      group: "MDM-related",
+      accent: "var(--terracotta)",
+      title: "MDM – Non-standard Change/Request",
+      desc: "A master data change or request that isn't standard and needs assessment or judgement.",
+      pills: ["itsupport@biomediaholdings.com", "P4 · 2 weeks min."],
+      to: "itsupport@biomediaholdings.com",
+      subjectTag: "MDM-Non-Std-Change-Request",
+      requiresApproval: true,
+    },
+  ];
+
+  // Order groups appear in on the page.
+  const GROUP_ORDER = [
+    "SAP-related",
+    "MDM-related",
+    "Digital Workplace",
+    "Digital Infrastructure (Standard + Non-standard)",
+    "AI/Data",
+    "Enterprise Applications",
+  ];
+
+  // Templates only apply to "std-request" for now.
+  // Add more entries here as you define them — id/label/body only.
+  // To add templates for another category, add a new key (e.g. "std-change": [...]).
+  const TEMPLATES = {
+    "std-request": [
+      {
+        id: "password-reset",
+        label: "Password reset",
+        body: "System/account: \nUsername: \nReason for reset: "
+      },
+      {
+        id: "new-user",
+        label: "New user account setup",
+        body: "New starter name: \nDepartment: \nStart date: \nSystems/access needed: "
+      },
+      {
+        id: "software-install",
+        label: "Standard software install",
+        body: "Software name: \nVersion (if known): \nBusiness justification: "
+      },
+    ],
+    "dw-request": [
+      {
+        id: "new-laptop",
+        label: "New laptop request",
+        // No body — this template routes to the IT User Database instead
+        // of filling the Description field. See the "link" property below.
+        body: "",
+        link: "https://spdscientific.sharepoint.com/:l:/r/sites/LIVES-ITS/Lists/IT%20User%20Database?e=4xvqvl",
+        linkLabel: "IT User Database",
+      },
+    ],
+  };
+
+  // Auto-filled into the Description field, based on the selected
+  // category's `kind` (incident / change / request). Edit this text to
+  // change the prompt questions for each kind.
+  const KIND_TEMPLATES = {
+    incident: [
+      "1) What is the issue?",
+      "[Describe]",
+      "",
+      "2) Error Message/Screenshot",
+      "[Paste the exact error message, or note that a screenshot is attached]",
+      "",
+      "3) Who is affected?",
+      "[Just me / My team / Multiple users / Everyone]",
+      "",
+      "4) What have you already done?",
+      "[e.g. restarted, cleared cache, tried again later]",
+      "",
+      "5) Business Impact",
+      "[e.g. I cannot access the system, and this is preventing me from completing today's report]",
+    ].join("\n"),
+
+    change: [
+      "1) What is being requested",
+      "[Describe]",
+      "",
+      "2) Why is this needed",
+      "[Explain]",
+      "",
+      "3) Expected Outcome",
+      "[Describe]",
+      "",
+      "4) Who is impacted?",
+      "[Just me / My team / Everyone]",
+      "",
+      "5) Any additional details, documents, screenshots",
+      "[Attach or describe]",
+      "",
+      "6) Impact if not implemented",
+      "[e.g. I cannot ...]",
+    ].join("\n"),
+
+    request: [
+      "1) What do you need",
+      "[Describe]",
+      "",
+      "2) Why do you need it (business reason)",
+      "[Explain]",
+      "",
+      "3) Who is this request for?",
+      "[Myself / Another user / Team / Multiple users]",
+      "",
+      "4) Any additional details, documents, screenshots",
+      "[Attach or describe]",
+      "",
+      "5) Impact if not implemented",
+      "[e.g. I cannot ...]",
+    ].join("\n"),
+
+    "change-request": [
+      "1) Is this a Change or a Request?",
+      "[Change / Request]",
+      "",
+      "2) What is being requested/needed",
+      "[Describe]",
+      "",
+      "3) Why is this needed (business reason)",
+      "[Explain]",
+      "",
+      "4) Who is this for / who is impacted?",
+      "[Just me / My team / Another user / Everyone]",
+      "",
+      "5) Any additional details, documents, screenshots",
+      "[Attach or describe]",
+      "",
+      "6) Impact if not implemented",
+      "[e.g. I cannot ...]",
+    ].join("\n"),
+  };
+
+  // Default Priority selected per kind — change this to adjust defaults.
+  const KIND_DEFAULT_PRIORITY = {
+    incident: "P3",
+    change: "P3",
+    request: "P4",
+    "change-request": "P3",
+  };
+
+  const PRIORITY_OPTIONS = ["P1", "P2", "P3", "P4"];
+
+  // ============================================================
+  let selectedCategory = null;
+  let lastAutoDescription = ""; // tracks auto-inserted text so we don't clobber user edits
+  let selectedFiles = []; // { name, size } — tracked separately since mailto can't carry real files
+
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  }
+
+  function addAttachedFiles(fileList) {
+    Array.from(fileList).forEach(f => {
+      if (!selectedFiles.some(sf => sf.name === f.name && sf.size === f.size)) {
+        selectedFiles.push({ name: f.name, size: f.size, file: f });
+      }
+    });
+    renderAttachList();
+  }
+
+  function renderAttachList() {
+    const attachList = document.getElementById("attachList");
+    const attachNote = document.getElementById("attachNote");
+    attachList.innerHTML = selectedFiles.map((f, i) => `
+      <span class="attach-chip">
+        \u{1F4CE} ${f.name} <span class="attach-chip-size">(${formatFileSize(f.size)})</span>
+        <button type="button" data-idx="${i}" aria-label="Remove ${f.name}">\u00D7</button>
+      </span>
+    `).join("");
+    attachList.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        selectedFiles.splice(Number(btn.dataset.idx), 1);
+        renderAttachList();
+      });
+    });
+    attachNote.style.display = selectedFiles.length ? "block" : "none";
+  }
+
+  (function initAttachments() {
+    const dropzone = document.getElementById("attachDropzone");
+    const input = document.getElementById("reqAttachments");
+
+    dropzone.addEventListener("click", () => input.click());
+
+    input.addEventListener("change", () => {
+      addAttachedFiles(input.files);
+      input.value = ""; // allow re-selecting the same file later
+    });
+
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.classList.remove("dragover");
+    });
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+      if (e.dataTransfer && e.dataTransfer.files) addAttachedFiles(e.dataTransfer.files);
+    });
+  })();
+
+  const prioritySelect = document.getElementById("reqPriority");
+
+  // Rebuilds the Priority dropdown so the correct option is marked
+  // "(default)" and pre-selected for the given kind.
+  function renderPriorityOptions(defaultP) {
+    prioritySelect.innerHTML = PRIORITY_OPTIONS.map(p =>
+      `<option value="${p}"${p === defaultP ? " selected" : ""}>${p}${p === defaultP ? " (default)" : ""}</option>`
+    ).join("");
+    const hintEl = document.getElementById("priorityHint");
+    if (hintEl) {
+      hintEl.textContent = `(not sure? ${defaultP} is a safe default for this type — IT will re-prioritize if needed)`;
+    }
+  }
+  renderPriorityOptions(KIND_DEFAULT_PRIORITY.incident);
+
+  // Icon SVGs (inline, so the file stays a single self-contained HTML page —
+  // no external image files needed for SharePoint hosting).
+  const GROUP_ICONS = {
+    "SAP-related": '<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>',
+    "AI/Data": '<line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>',
+    "Enterprise Applications": '<rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect>',
+    "Digital Infrastructure (Standard + Non-standard)": '<rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line>',
+    "Digital Workplace": '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>',
+    "MDM-related": '<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline>',
+  };
+
+  const GROUP_SHORT_DESC = {
+    "SAP-related": "SAP access, changes &amp; incidents",
+    "AI/Data": "Dashboards, models &amp; analytics",
+    "Enterprise Applications": "ERP, CRM &amp; business systems",
+    "Digital Infrastructure (Standard + Non-standard)": "Servers, network &amp; IT changes",
+    "Digital Workplace": "Endpoints, SharePoint &amp; access",
+    "MDM-related": "Data governance &amp; quality",
+  };
+
+  const GROUP_SHORT_TITLE = {
+    "SAP-related": "SAP",
+    "AI/Data": "AI/Data",
+    "Enterprise Applications": "Enterprise Apps",
+    "Digital Infrastructure (Standard + Non-standard)": "Digital Infrastructure",
+    "Digital Workplace": "Digital Workplace",
+    "MDM-related": "MDM",
+  };
+
+  const flowRow = document.getElementById("flowRow");
+  const detailPanel = document.getElementById("detailPanel");
+
+  GROUP_ORDER.forEach((groupName, i) => {
+    const catsInGroup = CATEGORIES.filter(c => c.group === groupName);
+    if (!catsInGroup.length) return;
+
+    const step = document.createElement("div");
+    step.className = "step-card";
+    step.dataset.group = groupName;
+    step.style.setProperty("--step-accent", catsInGroup[0].accent);
+    step.innerHTML = `
+      <div class="step-badge">
+        <div class="step-num">${i + 1}</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${GROUP_ICONS[groupName] || ""}</svg>
+      </div>
+      <div class="step-title">${GROUP_SHORT_TITLE[groupName] || groupName}</div>
+      <div class="step-desc">${GROUP_SHORT_DESC[groupName] || ""}</div>
+      <div class="step-count">${catsInGroup.length} options</div>
+    `;
+    step.addEventListener("click", () => openGroup(groupName));
+    flowRow.appendChild(step);
+
+    if (i < GROUP_ORDER.length - 1) {
+      const arrow = document.createElement("div");
+      arrow.className = "arrow-connector";
+      arrow.textContent = "→";
+      flowRow.appendChild(arrow);
+    }
+  });
+
+  // ---- Auto-fit the browse view (header + step cards + detail panel) to
+  // the visible window on load and on resize, so it fits on screen without
+  // scrolling regardless of window size. Once the form is revealed (a
+  // category has been picked), we stop auto-scaling — the form's height is
+  // unbounded/variable, and shrinking it while someone is filling it in
+  // would be disruptive. Normal scrolling takes over from there, which is
+  // expected behavior for a form.
+  const scaleContainer = document.getElementById("scaleContainer");
+  let formRevealed = false;
+  let fitRAF = null;
+
+  function fitScaleContainer() {
+    if (formRevealed || !scaleContainer) return;
+    scaleContainer.style.transform = "none";
+    scaleContainer.style.marginBottom = "0px";
+    const naturalHeight = scaleContainer.scrollHeight;
+
+    // Measure the space taken by everything after the scale container
+    // (footer + wrap's own bottom padding) using element offsets rather
+    // than document.scrollHeight — the latter clamps to the viewport
+    // height when content already fits, which breaks the "chrome" math.
+    const footer = document.querySelector(".top-footer");
+    const wrap = document.querySelector(".wrap");
+    let afterHeight = 40; // fallback
+    if (footer && wrap) {
+      const wrapPaddingBottom = parseFloat(getComputedStyle(wrap).paddingBottom) || 0;
+      const containerBottom = scaleContainer.offsetTop + naturalHeight;
+      const footerBottom = footer.offsetTop + footer.offsetHeight;
+      afterHeight = (footerBottom - containerBottom) + wrapPaddingBottom;
+    }
+
+    const buffer = 10;
+    const availableHeight = Math.max(window.innerHeight - afterHeight - scaleContainer.offsetTop - buffer, 200);
+    let scale = Math.min(availableHeight / naturalHeight, 1);
+    scale = Math.max(scale, 0.6); // never shrink past 60% — stay legible
+    if (scale < 0.999) {
+      scaleContainer.style.transform = `scale(${scale})`;
+      scaleContainer.style.marginBottom = (naturalHeight * scale - naturalHeight) + "px";
+    } else {
+      scaleContainer.style.transform = "none";
+      scaleContainer.style.marginBottom = "0px";
+    }
+  }
+
+  function scheduleFit() {
+    if (fitRAF) cancelAnimationFrame(fitRAF);
+    fitRAF = requestAnimationFrame(fitScaleContainer);
+  }
+
+  function resetScaleContainer() {
+    formRevealed = true;
+    if (scaleContainer) {
+      scaleContainer.style.transform = "none";
+      scaleContainer.style.marginBottom = "0px";
+    }
+  }
+
+  window.addEventListener("resize", scheduleFit);
+  window.addEventListener("orientationchange", scheduleFit);
+  scheduleFit();
+
+  function openGroup(groupName) {
+    document.querySelectorAll(".step-card").forEach(el => {
+      el.classList.toggle("active", el.dataset.group === groupName);
+    });
+
+    const catsInGroup = CATEGORIES.filter(c => c.group === groupName);
+    detailPanel.innerHTML = "";
+    detailPanel.style.display = "block";
+
+    const heading = document.createElement("div");
+    heading.className = "detail-panel-heading";
+    heading.textContent = groupName;
+    detailPanel.appendChild(heading);
+
+    const grid = document.createElement("div");
+    grid.className = "cat-grid";
+
+    catsInGroup.forEach(cat => {
+      const card = document.createElement("div");
+      card.className = "cat-card";
+      card.style.setProperty("--cat-accent", cat.accent);
+      card.dataset.id = cat.id;
+      card.innerHTML = `
+        <div class="check">✓</div>
+        <div class="cat-title">${cat.title}</div>
+        <div class="cat-desc">${cat.desc}</div>
+        <div class="cat-meta">${cat.pills.map(p => `<span class="pill">${p}</span>`).join("")}</div>
+      `;
+      card.addEventListener("click", () => selectCategory(cat.id));
+      grid.appendChild(card);
+    });
+
+    detailPanel.appendChild(grid);
+    detailPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    scheduleFit();
+  }
+
+  function selectCategory(id) {
+    selectedCategory = CATEGORIES.find(c => c.id === id);
+    document.querySelectorAll(".cat-card").forEach(el => {
+      el.classList.toggle("selected", el.dataset.id === id);
+    });
+
+    document.getElementById("formSection").style.display = "block";
+    resetScaleContainer();
+
+    // routing banner
+    const rb = document.getElementById("routingBanner");
+    const tagText = selectedCategory.subjectTag
+      ? `tagged <b>[${selectedCategory.subjectTag}]</b>`
+      : `sent untagged`;
+    rb.innerHTML = `
+      <div class="rb-label">ROUTES TO</div>
+      <div class="rb-detail">This will go to <b>${selectedCategory.to}</b>, ${tagText} in the subject line.</div>
+    `;
+
+    // pre-fill the Subject field with the category's tag prefix,
+    // replacing any prefix left over from a previously selected category
+    const summaryInput = document.getElementById("reqSummary");
+    const newPrefix = selectedCategory.subjectTag ? `[${selectedCategory.subjectTag}] ` : "";
+    const stripped = summaryInput.value.replace(/^\[[^\]]*\]\s*/, "");
+    summaryInput.value = newPrefix + stripped;
+
+    // Approval fields — required for all request/change categories (not incidents)
+    const approvalField = document.getElementById("approvalField");
+    const priorityField = document.getElementById("priorityField");
+    const descriptionEl = document.getElementById("reqDescription");
+
+    if (selectedCategory.requiresApproval) {
+      approvalField.style.display = "block";
+    } else {
+      approvalField.style.display = "none";
+      document.getElementById("reqApprovalName").value = "";
+      document.getElementById("reqApprovalEmail").value = "";
+    }
+
+    // Priority + auto-filled description template — every category has a
+    // `kind` (incident / change / request), each with its own template and
+    // its own default Priority.
+    priorityField.style.display = "block";
+    const defaultP = KIND_DEFAULT_PRIORITY[selectedCategory.kind];
+    renderPriorityOptions(defaultP);
+
+    const template = KIND_TEMPLATES[selectedCategory.kind] || "";
+    // Auto-fill the template, but don't overwrite anything the person has
+    // already typed (only fill if empty or still holding whatever template
+    // was auto-inserted for the previously selected category).
+    if (!descriptionEl.value.trim() || descriptionEl.value === lastAutoDescription) {
+      descriptionEl.value = template;
+      lastAutoDescription = template;
+    }
+
+
+    // template dropdown
+    const templateField = document.getElementById("templateField");
+    const templateSelect = document.getElementById("templateSelect");
+    const templateLinkBanner = document.getElementById("templateLinkBanner");
+    const templates = TEMPLATES[id];
+    templateLinkBanner.style.display = "none"; // reset whenever category changes
+    if (templates && templates.length) {
+      templateField.style.display = "block";
+      templateSelect.innerHTML = `<option value="">— Select a template —</option>` +
+        templates.map(t => `<option value="${t.id}">${t.label}</option>`).join("");
+      templateSelect.onchange = () => {
+        const t = templates.find(x => x.id === templateSelect.value);
+        if (t && t.link) {
+          // This template routes to an external system instead of the
+          // normal email flow — show a banner with the link, and leave
+          // the Description field as-is (nothing to prompt for here).
+          templateLinkBanner.style.display = "block";
+          templateLinkBanner.innerHTML = `
+            <div class="tlb-title">This is handled outside the portal</div>
+            <div class="tlb-desc">This is handled through the ${t.linkLabel} instead of email. Click below to submit it there directly.</div>
+            <a class="tlb-btn" href="${t.link}" target="_blank" rel="noopener">Open ${t.linkLabel} →</a>
+          `;
+        } else {
+          templateLinkBanner.style.display = "none";
+          document.getElementById("reqDescription").value = t ? t.body : "";
+        }
+      };
+    } else {
+      templateField.style.display = "none";
+      templateSelect.innerHTML = "";
+    }
+
+    document.getElementById("formSection").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  document.getElementById("submitBtn").addEventListener("click", () => {
+    if (!selectedCategory) return;
+
+    const name = document.getElementById("reqName").value.trim();
+    const email = document.getElementById("reqEmail").value.trim();
+    const entity = document.getElementById("reqEntity").value.trim();
+    const dept = document.getElementById("reqDept").value.trim();
+    const approvalName = document.getElementById("reqApprovalName").value.trim();
+    const approvalEmail = document.getElementById("reqApprovalEmail").value.trim();
+    const summary = document.getElementById("reqSummary").value.trim();
+    const description = document.getElementById("reqDescription").value.trim();
+
+    if (!summary) {
+      alert("Please add a subject — it becomes the email subject line.");
+      return;
+    }
+
+    if (selectedCategory.requiresApproval && (!approvalName || !approvalEmail)) {
+      alert("This request/change needs an approver's name, title, and email before it can be sent.");
+      return;
+    }
+
+    // The subject field already carries the category tag prefix (pre-filled
+    // on selection and editable). Prepend the selected Priority so it's the
+    // very first thing in the subject line.
+    const priority = document.getElementById("reqPriority").value;
+    const subject = `[${priority}] ${summary}`;
+
+    // Approver's email goes in CC (not the body) so they're actually copied
+    // on the thread; their name/title stays in the body as context.
+    const cc = selectedCategory.requiresApproval ? approvalEmail : "";
+
+    const bodyLines = [
+      `Requestor: ${name || "-"}`,
+      `Email: ${email || "-"}`,
+      `Entity/Location: ${entity || "-"}`,
+      `Department: ${dept || "-"}`,
+      ...(selectedCategory.requiresApproval ? [
+        `Approval Name, Title: ${approvalName || "-"}`,
+      ] : []),
+      `Priority: ${priority}`,
+      ``,
+      `Description:`,
+      description || "-",
+      ``,
+      ...(selectedFiles.length ? [
+        `Attachments (please attach these manually before sending):`,
+        ...selectedFiles.map(f => `- ${f.name} (${formatFileSize(f.size)})`),
+        ``,
+      ] : []),
+      `— Submitted via IT Service Request Portal`,
+    ].join("\n");
+
+    const mailtoParams = [`subject=${encodeURIComponent(subject)}`, `body=${encodeURIComponent(bodyLines)}`];
+    if (cc) mailtoParams.splice(0, 0, `cc=${encodeURIComponent(cc)}`);
+    const mailto = `mailto:${encodeURIComponent(selectedCategory.to)}?${mailtoParams.join("&")}`;
+
+    openMailto(mailto);
+
+    // Always show a manual fallback link too — some SharePoint embed
+    // contexts (iframes) block script-triggered navigation entirely,
+    // so a real, user-clicked <a> is the most reliable path.
+    const fb = document.getElementById("fallbackLink");
+    fb.style.display = "block";
+    fb.innerHTML = `Didn't open automatically? <a href="${mailto}" target="_blank" rel="noopener">Click here to open the email</a>.`;
+
+    // Copy-to-clipboard fallback — works even when the iframe/sandbox
+    // blocks navigation entirely, since it doesn't require leaving the page.
+    document.getElementById("copyTo").textContent = selectedCategory.to;
+    const ccRow = document.getElementById("copyCcRow");
+    if (cc) {
+      document.getElementById("copyCc").textContent = cc;
+      ccRow.style.display = "grid";
+    } else {
+      ccRow.style.display = "none";
+    }
+    document.getElementById("copySubject").textContent = subject;
+    document.getElementById("copyBody").textContent = bodyLines;
+    const attachReminder = selectedFiles.length
+      ? ` Don't forget to attach: ${selectedFiles.map(f => f.name).join(", ")}.`
+      : "";
+    document.getElementById("copyPanelNote").textContent = (cc
+      ? "In Outlook: click New Email, then paste each field in — To, CC, Subject, and Body."
+      : "In Outlook: click New Email, then paste each field in — To, Subject, and Body.") + attachReminder;
+    document.getElementById("copyPanel").style.display = "block";
+  });
+
+  function copyToClipboard(text, btn) {
+    function showCopied() {
+      const original = btn.textContent;
+      btn.textContent = "Copied";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove("copied");
+      }, 1500);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(showCopied).catch(() => fallbackCopy(text, showCopied));
+    } else {
+      fallbackCopy(text, showCopied);
+    }
+  }
+
+  function fallbackCopy(text, cb) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) { /* no-op */ }
+    document.body.removeChild(ta);
+    cb();
+  }
+
+  document.querySelectorAll(".copy-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const targetEl = document.getElementById(btn.dataset.target);
+      copyToClipboard(targetEl.textContent, btn);
+    });
+  });
+
+  function openMailto(url) {
+    // A real, user-initiated anchor click works in more contexts
+    // (including sandboxed iframes with allow-popups) than a script
+    // assignment to window.location.href.
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+</script>
+
+<script>
+  // Set this to the URL that employees can reach. For example:
+  // window.ITIL_TICKETING_API = "https://itil.example.com/api/tickets";
+  // If this portal is served by the Docker application itself, no change is needed.
+  const ITIL_TICKETING_API = window.ITIL_TICKETING_API ||
+    `${window.location.protocol}//${window.location.host}/api/tickets`;
+
+  // The legacy portal uses different display names from the new service catalogue.
+  const ITIL_CATEGORY_MAP = {
+    "sap-request": "SAP – Request", "sap-change": "SAP – Change",
+    "sap-incident": "SAP – Incident", "sap-nonstd": "SAP – Non-Standard Change/Request",
+    "data-request": "AI/Data – Standard Request", "data-change": "AI/Data – Standard Change",
+    "data-incident": "AI/Data – Incident", "data-nonstd": "AI/Data – Non-Standard Change/Request",
+    "ea-request": "Enterprise Applications – Standard Request", "ea-change": "Enterprise Applications – Standard Change",
+    "ea-incident": "Enterprise Applications – Incident", "ea-nonstd": "Enterprise Applications – Non-Standard Change/Request",
+    "std-request": "Digital Infrastructure – Standard Request", "std-change": "Digital Infrastructure – Standard Change",
+    "it-incident": "Digital Infrastructure – Incident", "it-nonstd": "Digital Infrastructure – Non-Standard Change/Request",
+    "dw-request": "Digital Workplace – Standard Request", "dw-change": "Digital Workplace – Standard Change",
+    "dw-incident": "Digital Workplace – Incident", "dw-nonstd": "Digital Workplace – Non-Standard Change/Request",
+    "mdm-request": "MDM – Standard Request", "mdm-change": "MDM – Standard Change",
+    "mdm-incident": "MDM – Incident", "mdm-nonstd": "MDM – Non-Standard Change/Request"
+  };
+
+  // Replace the old mailto listener with direct submission to ITIL Lite.
+  const legacySubmit = document.getElementById("submitBtn");
+  const directSubmit = legacySubmit.cloneNode(true);
+  legacySubmit.replaceWith(directSubmit);
+
+  directSubmit.addEventListener("click", async () => {
+    if (!selectedCategory) return;
+
+    const name = document.getElementById("reqName").value.trim();
+    const email = document.getElementById("reqEmail").value.trim();
+    const approvalName = document.getElementById("reqApprovalName").value.trim();
+    const approvalEmail = document.getElementById("reqApprovalEmail").value.trim();
+    const subject = document.getElementById("reqSummary").value.trim();
+    const description = document.getElementById("reqDescription").value.trim();
+    const message = document.getElementById("fallbackLink");
+
+    if (!name || !email || !subject || !description) {
+      alert("Please provide your name, email, subject, and description.");
+      return;
+    }
+    if (selectedCategory.requiresApproval && (!approvalName || !approvalEmail)) {
+      alert("This request/change needs an approver's name, title, and email.");
+      return;
+    }
+
+    const data = new FormData();
+    data.append("requester_name", name);
+    data.append("requester_email", email);
+    data.append("entity", document.getElementById("reqEntity").value.trim());
+    data.append("department", document.getElementById("reqDept").value.trim());
+    data.append("category", ITIL_CATEGORY_MAP[selectedCategory.id]);
+    data.append("priority", document.getElementById("reqPriority").value);
+    data.append("subject", subject);
+    data.append("description", description);
+    data.append("approval_name", approvalName);
+    data.append("approval_email", approvalEmail);
+    selectedFiles.forEach(file => { if (file.file) data.append("files", file.file, file.name); });
+
+    directSubmit.disabled = true;
+    directSubmit.textContent = "Submitting…";
+    message.style.display = "none";
+    document.getElementById("copyPanel").style.display = "none";
+    try {
+      const response = await fetch(ITIL_TICKETING_API, { method: "POST", body: data });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.detail || "Ticket submission failed.");
+      message.style.display = "block";
+      const emailNote = result.email_sent ? " A confirmation email was sent." : "";
+      message.innerHTML = `<b>Ticket ${result.number} submitted successfully.</b> It has been assigned to <b>${result.assignment_group}</b>.${emailNote}`;
+      document.getElementById("reqSummary").value = "";
+      document.getElementById("reqDescription").value = "";
+      selectedFiles = [];
+      renderAttachList();
+    } catch (error) {
+      message.style.display = "block";
+      message.textContent = `Ticket was not submitted: ${error.message}`;
+    } finally {
+      directSubmit.disabled = false;
+      directSubmit.textContent = "Submit ticket →";
+    }
+  });
+</script>
+
+</body>
+</html>

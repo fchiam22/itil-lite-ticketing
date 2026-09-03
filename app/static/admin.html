@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Biomedia IT Service Console</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="admin-page">
+  <header class="brand-header">
+    <div class="brand-lockup"><strong>BIOMEDIA</strong><span>IT &amp; Digital Transformation</span></div>
+    <div class="header-actions"><span class="portal-tag">IT SERVICE CONSOLE</span><a href="/">Employee portal →</a></div>
+  </header>
+
+  <main class="admin-main">
+    <section class="admin-intro">
+      <div><p class="eyebrow">STAFF WORKSPACE</p><h1>Service desk</h1><p>Review demand, work tickets, record replies, and monitor service performance.</p></div>
+      <div class="login-card">
+        <label>Staff key<input id="key" type="password" autocomplete="current-password"></label>
+        <label>Your name<input id="actor" maxlength="160" placeholder="e.g. Alex, IT Support"></label>
+        <button id="login">Open console</button>
+        <p id="loginMessage" role="status"></p>
+      </div>
+    </section>
+
+    <section id="console" class="hidden">
+      <nav class="view-tabs" aria-label="Console views">
+        <button class="view-tab active" data-view="ticketsView">Tickets</button>
+        <button class="view-tab" data-view="reportsView">ITIL report</button>
+        <button class="view-tab" data-view="routingView">Email routing</button>
+      </nav>
+
+      <section class="smtp-panel">
+        <div><p class="eyebrow">LOCAL SMTP TESTING</p><b>Captured mail inbox</b><span id="smtpStatus">Checking configuration…</span></div>
+        <label>Test recipient<input id="smtpRecipient" type="email" value="test.user@example.com"></label>
+        <button id="sendSmtpTest">Send SMTP test</button>
+        <a class="mailbox-link" href="http://localhost:8025" target="_blank" rel="noopener">Open Mailpit inbox ↗</a>
+        <p id="smtpMessage" role="status"></p>
+      </section>
+
+      <section id="ticketsView" class="console-view">
+        <div id="summary" class="summary"></div>
+        <div class="toolbar">
+          <label>Status<select id="status"><option value="">All statuses</option><option>New</option><option>In Progress</option><option>Waiting for User</option><option>Resolved</option><option>Closed</option></select></label>
+          <label>Assignment group<select id="group"><option value="">All groups</option></select></label>
+          <button id="refresh" class="secondary">Refresh</button>
+          <button id="csv" class="secondary">Download CSV</button>
+        </div>
+        <div class="tablewrap">
+          <table class="ticket-table">
+            <thead><tr><th>Ticket</th><th>Opened</th><th>Requester</th><th>Category / Group</th><th>Priority</th><th>Status</th><th>Subject</th><th></th></tr></thead>
+            <tbody id="tickets"></tbody>
+          </table>
+          <p id="emptyTickets" class="empty-state hidden">No tickets match these filters.</p>
+        </div>
+      </section>
+
+      <section id="reportsView" class="console-view hidden">
+        <div class="report-heading"><div><p class="eyebrow">ITIL-LITE SERVICE REPORT</p><h2>Service performance overview</h2><p id="reportGenerated"></p></div><button id="printReport" class="secondary">Print report</button></div>
+        <div id="reportMetrics" class="report-metrics"></div>
+        <div class="report-grid">
+          <article class="report-card"><h3>Ticket status</h3><div id="statusChart" class="bar-chart"></div></article>
+          <article class="report-card"><h3>Open-ticket aging</h3><div id="ageChart" class="bar-chart"></div></article>
+          <article class="report-card"><h3>Demand by assignment group</h3><div id="groupChart" class="bar-chart"></div></article>
+          <article class="report-card"><h3>Demand by ticket type</h3><div id="typeChart" class="bar-chart"></div></article>
+          <article class="report-card wide"><h3>Demand by category</h3><div id="categoryChart" class="bar-chart category-chart"></div></article>
+          <article class="report-card wide"><h3>Tickets opened — last 7 days</h3><div id="trendChart" class="trend-chart"></div></article>
+          <article class="report-card wide"><h3>Oldest open tickets</h3><div id="oldestOpen"></div></article>
+        </div>
+        <p class="report-note">Operational indicators are descriptive, not contractual SLAs. Use aging, high-priority backlog, and completion trends during regular service reviews to identify risk and improvement opportunities.</p>
+      </section>
+
+      <section id="routingView" class="console-view hidden">
+        <div class="report-heading"><div><p class="eyebrow">CONFIGURATION</p><h2>Category email routing</h2><p>Send each new ticket to the correct IT mailbox. Blank category recipients use the Service Desk fallback.</p></div></div>
+        <section class="fallback-card">
+          <div><b>Service Desk fallback</b><p>Required safety net for categories without a dedicated mailbox.</p></div>
+          <label>Fallback recipient<input id="fallbackRecipient" type="email" placeholder="service.desk@company.example"></label>
+          <button id="saveFallback">Save fallback</button>
+          <p id="routingMessage" role="status"></p>
+        </section>
+        <div class="tablewrap routing-tablewrap">
+          <table class="routing-table"><thead><tr><th>Service area</th><th>Category</th><th>Assignment group</th><th>Notification recipient</th><th>Effective recipient</th><th></th></tr></thead><tbody id="routingRows"></tbody></table>
+        </div>
+        <p class="report-note">When staff change a ticket category, the ticket type and assignment group are updated automatically and the effective recipient is notified. Every ticket retains the recipient used in its audit history.</p>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="ticketDialog" class="ticket-dialog">
+    <div class="dialog-header"><div><p class="eyebrow">TICKET WORKSPACE</p><h2 id="detailNumber"></h2><p id="detailSubject"></p></div><button id="closeDialog" class="icon-button" aria-label="Close ticket">×</button></div>
+    <div class="ticket-layout">
+      <section class="ticket-editor">
+        <div class="detail-grid">
+          <label>Status<select id="detailStatus"><option>New</option><option>In Progress</option><option>Waiting for User</option><option>Resolved</option><option>Closed</option></select></label>
+          <label>Priority<select id="detailPriority"><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select></label>
+          <label class="span-2">Category<select id="detailCategory"></select><small id="categoryRouteHint"></small></label>
+          <label class="span-2">Assignment group<select id="detailGroup"></select></label>
+        </div>
+        <label>Description<textarea id="detailDescription" rows="10" maxlength="50000"></textarea></label>
+        <button id="saveTicket">Save ticket changes</button><p id="detailMessage" role="status"></p>
+        <div class="requester-card"><h3>Requester</h3><p id="detailRequester"></p><p id="detailContext"></p></div>
+      </section>
+      <section class="conversation-panel">
+        <h3>Activity &amp; replies</h3>
+        <div id="timeline" class="timeline"></div>
+        <label>Add an IT reply<textarea id="replyBody" rows="5" maxlength="20000" placeholder="Add troubleshooting notes, an update, or the resolution…"></textarea></label>
+        <button id="addReply">Post reply</button>
+      </section>
+    </div>
+  </dialog>
+
+  <script src="/admin.js"></script>
+</body>
+</html>
